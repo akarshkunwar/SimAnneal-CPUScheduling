@@ -1,8 +1,11 @@
+% Replaced while loops with randi and vectorized the removal of 
+% zero columns to improve startup efficiency. Removed console output commands.
+
 rng default
 numberOfProcessors = 11;
 numberOfTasks = 25;
 
-% Generate lengths (kept your original logic, just cleaned up spacing)
+% Generate lengths
 lengths = [10*rand(1,numberOfTasks); 7*rand(1,numberOfTasks);
            2*rand(1,numberOfTasks);  5*rand(1,numberOfTasks);
            3*rand(1,numberOfTasks);  4*rand(1,numberOfTasks);
