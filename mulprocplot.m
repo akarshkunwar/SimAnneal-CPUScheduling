@@ -1,65 +1,41 @@
-function stop = mulprocplot(~,optimvalues,flag,lengths)
-% STOP = MULPROCPLOT(OPTIONS,OPTIMVALUES,FLAG) where OPTIMVALUES is a
-% structure with the following fields:
-% x: current point
-% fval: function value at x
-% bestx: best point found so far
-% bestfval: function value at bestx
-% temperature: current temperature
-% iteration: current iteration
-% funccount: number of function evaluations
-% t0: start time
-% k: annealing parameter 'k'
-% FLAG: Current state in which PlotFcn is called. Possible values are:
-% init: initialization state
-% iter: iteration state
-% done: final state
-% STOP: A boolean to stop the algorithm.
+function stop = mulprocplot(~, optimvalues, flag, lengths)
+% Custom plot function for current schedule
 
 persistent thisTitle %#ok
-
 stop = false;
+
 switch flag
     case 'init'
-        set(gca,'xlimmode','manual','zlimmode','manual', ...
-            'alimmode','manual')
+        set(gca, 'xlimmode', 'manual', 'zlimmode', 'manual', 'alimmode', 'manual');
         titleStr = sprintf('Current Point - Iteration %d', optimvalues.iteration);
-        thisTitle = title(titleStr,'interp','none');
-        toplot = i_generatePlotData(optimvalues, lengths);
-        ylabel('Time','interp','none');
-        bar(toplot, 'stacked','edgecolor','none');
-        Xlength = size(toplot,1);        
-        set(gca,'xlim',[0,1 + Xlength])
+        thisTitle = title(titleStr, 'interp', 'none');
+        ylabel('Time', 'interp', 'none');
+        
+        toplot = i_generatePlotData(optimvalues.x, lengths);
+        bar(toplot, 'stacked', 'edgecolor', 'none');
+        set(gca, 'xlim', [0, size(toplot, 1) + 1]);
+        
     case 'iter'
         if ~rem(optimvalues.iteration, 100)
-            toplot = i_generatePlotData(optimvalues, lengths);
-            bar(toplot, 'stacked','edgecolor','none');
+            toplot = i_generatePlotData(optimvalues.x, lengths);
+            bar(toplot, 'stacked', 'edgecolor', 'none');
             titleStr = sprintf('Current Point - Iteration %d', optimvalues.iteration);
-            thisTitle = title(titleStr,'interp','none');            
+            thisTitle = title(titleStr, 'interp', 'none');            
         end
 end
+end
 
-function toplot = i_generatePlotData(optimvalues, lengths)
-
-schedule = optimvalues.x;
-nrows = size(schedule,1);
-% Remove zero columns (all processes are idle)
-maxlen = 0;
-for i = 1:nrows
-    if max(nnz(schedule(i,:))) > maxlen
-        maxlen = max(nnz(schedule(i,:)));
+function toplot = i_generatePlotData(schedule, lengths)
+    activeCols = any(schedule > 0, 1);
+    if any(activeCols)
+        schedule = schedule(:, 1:find(activeCols, 1, 'last'));
     end
-end
-schedule = schedule(:,1:maxlen);
 
-toplot = zeros(size(schedule));
-[nrows, ncols] = size(schedule);
-for i = 1:nrows
-    for j = 1:ncols
-        if schedule(i,j)==0 % idle process
-            toplot(i,j) = 0;
-        else
-            toplot(i,j) = lengths(i,schedule(i,j));
-        end
+    nrows = size(schedule, 1);
+    toplot = zeros(size(schedule));
+    
+    for i = 1:nrows
+        tasks = schedule(i, schedule(i,:) > 0);
+        toplot(i, 1:length(tasks)) = lengths(i, tasks);
     end
 end
