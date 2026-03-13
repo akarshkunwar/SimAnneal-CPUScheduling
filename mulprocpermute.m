@@ -1,3 +1,6 @@
+% Optimized neighbor generation by eliminating while loops for finding 
+% non-empty processors and utilizing array slicing for data shifting instead of iterative loops.
+
 function schedule = mulprocpermute(optimValues, problemData)
 % MULPROCPERMUTE Moves one random task to a different processor.
 
