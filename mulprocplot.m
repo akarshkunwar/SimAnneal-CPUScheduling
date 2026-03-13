@@ -1,3 +1,6 @@
+% Streamlined the i_generatePlotData function to use vectorized logic for 
+% finding active tasks, matching the optimizations made in the fitness function.
+
 function stop = mulprocplot(~, optimvalues, flag, lengths)
 % Custom plot function for current schedule
 
