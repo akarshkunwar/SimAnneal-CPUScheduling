@@ -1,16 +1,17 @@
-function timeToComplete = mulprocfitness(schedule, lengths)
-% MULPROCFITNESS determines the fitness of the given schedule.
+function makespan = mulprocfitness(schedule, lengths)
+% MULPROCFITNESS determines the fitness (makespan) of the given schedule.
 
-[nrows ncols] = size(schedule);
-timeToComplete = zeros(1,nrows);
+nrows = size(schedule, 1);
+timeToComplete = zeros(1, nrows);
+
 for i = 1:nrows
-    timeToComplete(i) = 0;
-    for j = 1:ncols
-        if schedule(i,j)~=0
-            timeToComplete(i) = timeToComplete(i)+lengths(i,schedule(i,j));
-        else
-            break
-        end
-    end
+    % Extract only the active tasks for this processor (ignores 0s)
+    tasks = schedule(i, schedule(i, :) > 0);
+    
+    % Sum the lengths of these tasks using vector indexing
+    timeToComplete(i) = sum(lengths(i, tasks));
 end
-timeToComplete = max(timeToComplete);
+
+% The fitness is the maximum time taken by any single processor
+makespan = max(timeToComplete);
+end
