@@ -21,11 +21,9 @@ Key improvements include:
 The simulation includes custom plotting functions that track the current state and the optimal state in real-time as the algorithm explores the neighborhood space. 
 
 ### Live Plot Output
-*(Insert a screenshot or GIF of the stacked bar charts here)*
 ![Live Plot](<img width="1783" height="1059" alt="image" src="https://github.com/user-attachments/assets/1bbbb386-735d-4344-b67c-a48011ca988a" />
 )
 
 ### Command Window Output
-*(Insert a screenshot of the final command window output showing the iterations and final objective value here)*
 ![Command Window Output](<img width="1577" height="647" alt="image" src="https://github.com/user-attachments/assets/8a09f62b-d576-4169-993f-b075ebad86d8" />
 )
