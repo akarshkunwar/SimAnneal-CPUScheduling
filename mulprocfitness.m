@@ -1,3 +1,6 @@
+% Replaced the inner for loop with vectorized array indexing and sum().
+% This significantly reduces execution time per iteration.
+
 function makespan = mulprocfitness(schedule, lengths)
 % MULPROCFITNESS determines the fitness (makespan) of the given schedule.
 
